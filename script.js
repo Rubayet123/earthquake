@@ -151,15 +151,17 @@ function createTimelineChart() {
   const yearly = {};
   allQuakes.forEach(q => {
     const year = new Date(q.properties.time).getFullYear();
-    if (!yearly[year]) yearly[year] = { count: 0, maxMag: 0, quakes: [] };
+    if (!yearly[year]) yearly[year] = { count: 0, maxMag: 0 };
     yearly[year].count++;
     yearly[year].maxMag = Math.max(yearly[year].maxMag, q.properties.mag || 0);
-    yearly[year].quakes.push(q);
   });
 
-  const years = Object.keys(yearly).sort((a, b) => a - b);
+  const years = Object.keys(yearly).map(Number).sort((a, b) => a - b);
   const counts = years.map(y => yearly[y].count);
   const maxMags = years.map(y => yearly[y].maxMag);
+
+  // Destroy previous chart if exists
+  if (timelineChart) timelineChart.destroy();
 
   timelineChart = new Chart(ctx, {
     type: 'bar',
@@ -170,21 +172,26 @@ function createTimelineChart() {
           type: 'bar',
           label: 'Number of Earthquakes',
           data: counts,
-          backgroundColor: 'rgba(99, 102, 241, 0.6)',
-          borderColor: 'rgb(99, 102, 241)',
+          backgroundColor: 'rgba(99, 102, 241, 0.7)',
+          borderColor: 'rgb(79, 70, 229)',
           borderWidth: 1,
+          borderRadius: 6,
+          borderSkipped: false,
           yAxisID: 'y'
         },
         {
           type: 'line',
-          label: 'Strongest in Year',
+          label: 'Strongest Magnitude',
           data: maxMags,
           borderColor: '#ef4444',
-          backgroundColor: '#fca5a5',
-          borderWidth: 3,
+          backgroundColor: 'rgba(239, 68, 68, 0.1)',
           pointBackgroundColor: '#dc2626',
-          pointRadius: 5,
-          tension: 0.3,
+          pointBorderColor: '#fff',
+          pointBorderWidth: 3,
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          tension: 0.4,
+          fill: false,
           yAxisID: 'y1'
         }
       ]
@@ -192,41 +199,74 @@ function createTimelineChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
       plugins: {
+        legend: {
+          position: 'top',
+          labels: { font: { size: 14 }, padding: 20 }
+        },
         tooltip: {
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          cornerRadius: 8,
+          padding: 12,
+          titleFont: { size: 14 },
+          bodyFont: { size: 13 },
           callbacks: {
-            label: ctx => {
-              if (ctx.dataset.label === 'Number of Earthquakes') {
-                return `${ctx.formattedValue} earthquake(s) in ${ctx.label}`;
+            label: (ctx) => {
+              if (ctx.dataset.label.includes('Number')) {
+                const plural = ctx.parsed.y === 1 ? '' : 's';
+                return ` ${ctx.parsed.y} earthquake${plural} in ${ctx.label}`;
               }
-              return `Strongest: M ${ctx.formattedValue} in ${ctx.label}`;
+              return ` Strongest: M ${ctx.parsed.y.toFixed(1)}`;
             }
           }
-        },
-        legend: { position: 'top' }
+        }
       },
       scales: {
-        x: { title: { display: true, text: 'Year', font: { weight: 'bold' }}},
+        x: {
+          ticks: {
+            maxTicksLimit: 12,
+            font: { size: 11 },
+            callback: function(value, index) {
+              const year = years[index];
+              return year % 10 === 0 ? year : (window.innerWidth < 640 && year % 20 !== 0) ? '' : year;
+            }
+          },
+          grid: { display: false }
+        },
         y: {
           type: 'linear',
           position: 'left',
-          title: { display: true, text: 'Count' },
-          beginAtZero: true
+          title: { display: true, text: 'Count', font: { weight: 'bold' } },
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1,                    // Forces integers only
+            callback: value => value,       // Shows 0,1,2,3,... cleanly
+            font: { size: 12 }
+          },
+          grid: { color: 'rgba(0,0,0,0.05)' }
         },
         y1: {
           type: 'linear',
           position: 'right',
-          title: { display: true, text: 'Magnitude', color: '#ef4444' },
-          grid: { drawOnChartArea: false },
           min: 2.5,
-          max: 8
+          max: 8,
+          title: { display: true, text: 'Magnitude', color: '#ef4444', font: { weight: 'bold' } },
+          ticks: {
+            stepSize: 0.5,
+            font: { size: 12 },
+            color: '#ef4444'
+          },
+          grid: { drawOnChartArea: false }
         }
       },
       onClick: (e, elements) => {
         if (elements.length > 0) {
           const index = elements[0].index;
-          const year = parseInt(years[index]);
+          const year = years[index];
           focusOnYear(year);
         }
       }
