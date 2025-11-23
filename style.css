@@ -1,0 +1,7 @@
+body { font-family: 'Inter', sans-serif; }
+#map { width: 100%; height: 600px; }
+.mag-3 { fill: #93C5FD; stroke: #3B82F6; }
+.mag-4 { fill: #FDBA74; stroke: #F97316; }
+.mag-5 { fill: #FCA5A5; stroke: #EF4444; }
+.mag-6 { fill: #F87171; stroke: #DC2626; }
+.dark .leaflet-container { filter: invert(1) hue-rotate(180deg); }
