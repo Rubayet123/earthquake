@@ -39,66 +39,85 @@
   <div class="container mx-auto px-4 py-8 grid lg:grid-cols-4 gap-8">
     <!-- Sidebar Controls -->
     <aside class="lg:col-span-1 space-y-6">
+      
+<!-- Modern Premium Gradient Stat Cards -->
+<div id="stats" class="space-y-3">
 
+  <!-- Total Quakes -->
+  <div class="group flex items-center justify-between 
+              bg-gradient-to-r from-blue-600 to-blue-700 
+              text-white rounded-xl p-4 shadow-md hover:shadow-xl 
+              transition-all duration-300 cursor-default relative overflow-hidden">
 
-      <!-- Modern Colored Pill-Style One-Line Stats Cards -->
-      <div id="stats" class="space-y-2">
+      <!-- Glow sheen effect -->
+      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition"></div>
 
-      <!-- Total Quakes -->
-      <div class="flex items-center justify-between bg-blue-600 text-white rounded-xl p-3
-                shadow-md hover:shadow-lg transition cursor-default">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-blue-800 text-white text-xl font-bold">
+      <div class="flex items-center gap-3 relative z-10">
+          <div class="w-10 h-10 flex items-center justify-center 
+                      rounded-lg bg-white/20 backdrop-blur-md 
+                      text-white text-xl font-bold">
             🌎
           </div>
-          <div class="text-sm font-medium">
+          <div class="text-sm font-medium tracking-wide">
             Total Recorded Quakes
           </div>
       </div>
-      <div class="text-xl font-bold">185</div>
+
+      <div class="text-2xl font-extrabold relative z-10">185</div>
   </div>
 
+
   <!-- Strongest Ever -->
-  <div class="flex items-center justify-between bg-rose-600 text-white rounded-xl p-3
-              shadow-md hover:shadow-lg transition cursor-pointer"
+  <div class="group flex items-center justify-between 
+              bg-gradient-to-r from-rose-600 to-pink-600 
+              text-white rounded-xl p-4 shadow-md hover:shadow-xl 
+              transition-all duration-300 cursor-pointer relative overflow-hidden"
        onclick="focusOnQuake('strongest')">
 
-      <div class="flex items-center gap-3">
-          <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-rose-800 text-white text-lg font-bold">
+      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition"></div>
+
+      <div class="flex items-center gap-3 relative z-10">
+          <div class="w-10 h-10 flex items-center justify-center 
+                      rounded-lg bg-white/20 backdrop-blur-md 
+                      text-white text-xl font-bold">
             ⚡
           </div>
-          <div class="text-sm">
+          <div class="text-sm tracking-wide">
             <span class="font-semibold">Strongest Ever</span> • 
             <span class="opacity-90">08 Jul 1918</span>
           </div>
       </div>
 
-      <div class="text-xl font-bold">M 7.1</div>
+      <div class="text-2xl font-extrabold relative z-10">M 7.1</div>
   </div>
 
+
   <!-- Latest Quake -->
-  <div class="flex items-center justify-between bg-emerald-600 text-white rounded-xl p-3
-              shadow-md hover:shadow-lg transition cursor-pointer"
+  <div class="group flex items-center justify-between 
+              bg-gradient-to-r from-emerald-600 to-teal-600 
+              text-white rounded-xl p-4 shadow-md hover:shadow-xl 
+              transition-all duration-300 cursor-pointer relative overflow-hidden"
        onclick="focusOnQuake('latest')">
 
-      <div class="flex items-center gap-3">
-          <div class="w-10 h-10 flex items-center justify-center rounded-lg bg-emerald-800 text-white text-lg font-bold">
+      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition"></div>
+
+      <div class="flex items-center gap-3 relative z-10">
+          <div class="w-10 h-10 flex items-center justify-center 
+                      rounded-lg bg-white/20 backdrop-blur-md 
+                      text-white text-xl font-bold">
             🕒
           </div>
-          <div class="text-sm">
+          <div class="text-sm tracking-wide">
             <span class="font-semibold">Latest Quake</span> • 
             <span class="opacity-90">11 km W of Narsingdi</span> • 
             <span class="opacity-80">22 Nov 2025</span>
           </div>
       </div>
 
-      <div class="text-xl font-bold">M 4.3</div>
+      <div class="text-2xl font-extrabold relative z-10">M 4.3</div>
   </div>
 
 </div>
-
-
-
       
 
       <!-- Filters (now comes after stats) -->
