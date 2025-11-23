@@ -108,7 +108,7 @@ function renderStats() {
     <div class="group flex items-center justify-between bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-default relative overflow-hidden">
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
-            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">Globe</div>
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">🌎</div>
             <div>
                 <div class="text-xs opacity-90">Total Recorded</div>
                 <div class="font-semibold">Earthquakes</div>
@@ -122,7 +122,7 @@ function renderStats() {
          onclick="focusOnQuake('${strongest.id}')">
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
-            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">Lightning</div>
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">⚡</div>
             <div>
                 <div class="text-xs opacity-90">Strongest Ever</div>
                 <div class="font-semibold text-sm">${strongDate}</div>
@@ -136,7 +136,7 @@ function renderStats() {
          onclick="focusOnQuake('${latest.id}')">
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
-            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">Clock</div>
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">🕒</div>
             <div>
                 <div class="text-xs opacity-90">Latest Quake</div>
                 <div class="font-semibold text-sm">${latestPlace}</div>
