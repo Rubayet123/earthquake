@@ -97,6 +97,23 @@
       <div id="latestMag" class="text-3xl font-extrabold relative z-10">M 4.3</div>
   </div>
 </div>
+
+
+<!-- Earthquake Risk Zones Toggle & Legend -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-5">
+  <div class="flex items-center justify-between mb-3">
+    <h3 class="font-semibold text-gray-800 dark:text-gray-200">Earthquake Risk Zones</h3>
+    <button id="toggleZones" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg transition">
+      Show Zones
+    </button>
+  </div>
+  <div id="zonesLegend" class="hidden space-y-1 text-xs">
+    <div class="flex items-center gap-2"><span class="w-4 h-4 bg-red-500 rounded"></span> Zone 1 – Very High</div>
+    <div class="flex items-center gap-2"><span class="w-4 h-4 bg-orange-500 rounded"></span> Zone 2 – High</div>
+    <div class="flex items-center gap-2"><span class="w-4 h-4 bg-yellow-500 rounded"></span> Zone 3 – Moderate</div>
+    <div class="flex items-center gap-2"><span class="w-4 h-4 bg-green-500 rounded"></span> Zone 4 – Low</div>
+  </div>
+</div>
       
 
       <!-- Filters (now comes after stats) -->
