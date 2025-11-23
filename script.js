@@ -1,6 +1,7 @@
 let allQuakes = [];
 let map, markerGroup;
-let markers = new Map(); // To store quake.id → marker
+let markers = new Map();
+let timelineChart = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const response = await fetch('data/earthquakes.json');
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderStats();
   renderQuakeList();
   setupFilters();
+  createTimelineChart(); // NEW: Timeline
 });
 
 function initMap() {
@@ -52,7 +54,7 @@ function updateMap(quakes) {
 
     marker.bindPopup(`
       <div class="text-center font-semibold p-2">
-        <div class="text-2xl font-bold text-red-600">M ${mag.toFixed(1)}</div>
+        <div class="text-2xl font-bold ${mag >= 5 ? 'text-red-600' : 'text-orange-600'}">M ${mag.toFixed(1)}</div>
         <div class="text-lg">${p.place}</div>
         <div class="text-sm text-gray-600">${date}</div>
         ${p.felt ? `<div class="mt-2 text-xs bg-yellow-100 rounded-full px-3 py-1 inline-block">Felt by ${p.felt} people</div>` : ''}
@@ -60,7 +62,7 @@ function updateMap(quakes) {
     `, { maxWidth: 400 });
 
     markerGroup.addLayer(marker);
-    markers.set(quake.id, marker); // Store for later clicking
+    markers.set(quake.id, marker);
   });
 }
 
@@ -70,12 +72,21 @@ function getColor(mag) {
          mag >= 4 ? '#f97316' : '#60a5fa';
 }
 
-// NEW: Function to zoom & open a specific quake
 function focusOnQuake(quakeId) {
   const marker = markers.get(quakeId);
   if (marker) {
     map.setView(marker.getLatLng(), 11);
-    setTimeout(() => marker.openPopup(), 600); // Small delay for smooth zoom
+    setTimeout(() => marker.openPopup(), 600);
+  }
+}
+
+function focusOnYear(year) {
+  const quakesInYear = allQuakes.filter(q => new Date(q.properties.time).getFullYear() === year);
+  if (quakesInYear.length > 0) {
+    updateMap(quakesInYear);
+    const avgLat = quakesInYear.reduce((sum, q) => sum + q.geometry.coordinates[1], 0) / quakesInYear.length;
+    const avgLng = quakesInYear.reduce((sum, q) => sum + q.geometry.coordinates[0], 0) / quakesInYear.length;
+    map.setView([avgLat, avgLng], 9);
   }
 }
 
@@ -130,6 +141,97 @@ function renderQuakeList() {
       </div>
     `;
   }).join('');
+}
+
+// NEW: Beautiful Interactive Timeline Chart
+function createTimelineChart() {
+  const ctx = document.getElementById('timelineChart').getContext('2d');
+
+  // Group by year
+  const yearly = {};
+  allQuakes.forEach(q => {
+    const year = new Date(q.properties.time).getFullYear();
+    if (!yearly[year]) yearly[year] = { count: 0, maxMag: 0, quakes: [] };
+    yearly[year].count++;
+    yearly[year].maxMag = Math.max(yearly[year].maxMag, q.properties.mag || 0);
+    yearly[year].quakes.push(q);
+  });
+
+  const years = Object.keys(yearly).sort((a, b) => a - b);
+  const counts = years.map(y => yearly[y].count);
+  const maxMags = years.map(y => yearly[y].maxMag);
+
+  timelineChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: years,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Number of Earthquakes',
+          data: counts,
+          backgroundColor: 'rgba(99, 102, 241, 0.6)',
+          borderColor: 'rgb(99, 102, 241)',
+          borderWidth: 1,
+          yAxisID: 'y'
+        },
+        {
+          type: 'line',
+          label: 'Strongest in Year',
+          data: maxMags,
+          borderColor: '#ef4444',
+          backgroundColor: '#fca5a5',
+          borderWidth: 3,
+          pointBackgroundColor: '#dc2626',
+          pointRadius: 5,
+          tension: 0.3,
+          yAxisID: 'y1'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        tooltip: {
+          callbacks: {
+            label: ctx => {
+              if (ctx.dataset.label === 'Number of Earthquakes') {
+                return `${ctx.formattedValue} earthquake(s) in ${ctx.label}`;
+              }
+              return `Strongest: M ${ctx.formattedValue} in ${ctx.label}`;
+            }
+          }
+        },
+        legend: { position: 'top' }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Year', font: { weight: 'bold' }}},
+        y: {
+          type: 'linear',
+          position: 'left',
+          title: { display: true, text: 'Count' },
+          beginAtZero: true
+        },
+        y1: {
+          type: 'linear',
+          position: 'right',
+          title: { display: true, text: 'Magnitude', color: '#ef4444' },
+          grid: { drawOnChartArea: false },
+          min: 2.5,
+          max: 8
+        }
+      },
+      onClick: (e, elements) => {
+        if (elements.length > 0) {
+          const index = elements[0].index;
+          const year = parseInt(years[index]);
+          focusOnYear(year);
+        }
+      }
+    }
+  });
 }
 
 function setupFilters() {
