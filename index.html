@@ -41,82 +41,61 @@
     <aside class="lg:col-span-1 space-y-6">
       
 <!-- Modern Premium Gradient Stat Cards -->
-<div id="stats" class="space-y-3">
-
+<div id="stats" class="space-y-4">
   <!-- Total Quakes -->
-  <div class="group flex items-center justify-between 
-              bg-gradient-to-r from-blue-600 to-blue-700 
-              text-white rounded-xl p-4 shadow-md hover:shadow-xl 
+  <div class="group flex items-center justify-between
+              bg-gradient-to-r from-blue-600 to-blue-700
+              text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
               transition-all duration-300 cursor-default relative overflow-hidden">
-
-      <!-- Glow sheen effect -->
-      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition"></div>
-
+      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
       <div class="flex items-center gap-3 relative z-10">
-          <div class="w-10 h-10 flex items-center justify-center 
-                      rounded-lg bg-white/20 backdrop-blur-md 
-                      text-white text-xl font-bold">
-            🌎
+          <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
+            Globe
           </div>
-          <div class="text-sm font-medium tracking-wide">
-            Total Recorded Quakes
+          <div>
+              <div class="text-xs opacity-90">Total Recorded</div>
+              <div class="font-semibold">Earthquakes</div>
           </div>
       </div>
-
-      <div class="text-2xl font-extrabold relative z-10">185</div>
+      <div class="text-3xl font-extrabold relative z-10">185</div>
   </div>
-
 
   <!-- Strongest Ever -->
-  <div class="group flex items-center justify-between 
-              bg-gradient-to-r from-rose-600 to-pink-600 
-              text-white rounded-xl p-4 shadow-md hover:shadow-xl 
-              transition-all duration-300 cursor-pointer relative overflow-hidden"
-       onclick="focusOnQuake('strongest')">
-
-      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition"></div>
-
+  <div id="strongestCard" class="group flex items-center justify-between
+              bg-gradient-to-r from-rose-600 to-pink-600
+              text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
+              transition-all duration-300 cursor-pointer relative overflow-hidden">
+      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
       <div class="flex items-center gap-3 relative z-10">
-          <div class="w-10 h-10 flex items-center justify-center 
-                      rounded-lg bg-white/20 backdrop-blur-md 
-                      text-white text-xl font-bold">
-            ⚡
+          <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
+            Lightning
           </div>
-          <div class="text-sm tracking-wide">
-            <span class="font-semibold">Strongest Ever</span> • 
-            <span class="opacity-90">08 Jul 1918</span>
+          <div>
+              <div class="text-xs opacity-90">Strongest Ever</div>
+              <div id="strongestDate" class="font-semibold text-sm">08 Jul 1918</div>
           </div>
       </div>
-
-      <div class="text-2xl font-extrabold relative z-10">M 7.1</div>
+      <div id="strongestMag" class="text-3xl font-extrabold relative z-10">M 7.1</div>
   </div>
-
 
   <!-- Latest Quake -->
-  <div class="group flex items-center justify-between 
-              bg-gradient-to-r from-emerald-600 to-teal-600 
-              text-white rounded-xl p-4 shadow-md hover:shadow-xl 
-              transition-all duration-300 cursor-pointer relative overflow-hidden"
-       onclick="focusOnQuake('latest')">
-
-      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition"></div>
-
+  <div id="latestCard" class="group flex items-center justify-between
+              bg-gradient-to-r from-emerald-600 to-teal-600
+              text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
+              transition-all duration-300 cursor-pointer relative overflow-hidden">
+      <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
       <div class="flex items-center gap-3 relative z-10">
-          <div class="w-10 h-10 flex items-center justify-center 
-                      rounded-lg bg-white/20 backdrop-blur-md 
-                      text-white text-xl font-bold">
-            🕒
+          <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
+            Clock
           </div>
-          <div class="text-sm tracking-wide">
-            <span class="font-semibold">Latest Quake</span> • 
-            <span class="opacity-90">11 km W of Narsingdi</span> • 
-            <span class="opacity-80">22 Nov 2025</span>
+          <div>
+              <div class="text-xs opacity-90">Latest Quake</div>
+              <div id="latestPlace" class="font-semibold text-sm">11 km W of Narsingdi</div>
+              <div id="latestDate" class="text-xs opacity-80">22 Nov 2025</div>
           </div>
       </div>
-
-      <div class="text-2xl font-extrabold relative z-10">M 4.3</div>
+      <div id="latestMag" class="text-3xl font-extrabold relative z-10">M 4.3</div>
   </div>
-
 </div>
       
 
