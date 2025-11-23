@@ -116,29 +116,96 @@
 </div>
       
 
-      <!-- Filters (now comes after stats) -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h2 class="text-xl font-semibold mb-4">Filters</h2>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium mb-1">Min Magnitude</label>
-            <input type="range" id="magFilter" min="2.5" max="7" step="0.1" value="2.5" class="w-full"/>
-            <span id="magValue" class="text-sm text-gray-600 dark:text-gray-400">≥ 2.5</span>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">From Year</label>
-            <input type="range" id="yearFilter" min="1900" max="2025" value="1900" class="w-full"/>
-            <div class="flex justify-between text-xs text-gray-500">
-              <span>1900</span>
-              <span id="yearValue">All time</span>
-              <span>2025</span>
-            </div>
-          </div>
-          <button id="resetBtn" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-lg transition transform hover:scale-105">
-            Reset Filters
-          </button>
+<!-- Modern Filters Panel with Risk Zones & Fault Lines -->
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
+  <h2 class="text-xl font-semibold mb-5 text-gray-800 dark:text-gray-200">Filters & Layers</h2>
+  
+  <div class="space-y-6">
+
+    <!-- Min Magnitude -->
+    <div>
+      <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Min Magnitude</label>
+      <input type="range" id="magFilter" min="2.5" max="7" step="0.1" value="2.5" 
+             class="w-full h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider">
+      <div class="flex justify-between text-xs mt-2 text-gray-600 dark:text-gray-400">
+        <span>2.5</span>
+        <span id="magValue" class="font-semibold text-indigo-600 dark:text-indigo-400">≥ 2.5</span>
+        <span>7.0</span>
+      </div>
+    </div>
+
+    <!-- From Year -->
+    <div>
+      <label class="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">From Year</label>
+      <input type="range" id="yearFilter" min="1900" max="2025" value="1900"
+             class="w-full h-2 bg-gray-300 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer slider">
+      <div class="flex justify-between text-xs mt-2 text-gray-600 dark:text-gray-400">
+        <span>1900</span>
+        <span id="yearValue" class="font-semibold text-indigo-600 dark:text-indigo-400">All time</span>
+        <span>2025</span>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr class="border-gray-200 dark:border-gray-700">
+
+    <!-- Earthquake Risk Zones Toggle -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+          <span class="text-xl">Warning</span>
+        </div>
+        <div>
+          <div class="font-medium text-gray-800 dark:text-gray-200">Earthquake Risk Zones</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Show high-risk areas</div>
         </div>
       </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="toggleZones" class="sr-only peer">
+        <div class="w-12 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer 
+                    dark:bg-gray-700 peer-checked:after:translate-x-full 
+                    peer-checked:after:border-white after:content-[''] 
+                    after:absolute after:top-[2px] after:left-[2px] 
+                    after:bg-white after:rounded-full after:h-5 after:w-5 
+                    after:transition-all peer-checked:bg-red-600">
+        </div>
+      </label>
+    </div>
+
+    <!-- Major Fault Lines Toggle -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+          <span class="text-xl">Crack</span>
+        </div>
+        <div>
+          <div class="font-medium text-gray-800 dark:text-gray-200">Major Fault Lines</div>
+          <div class="text-xs text-gray-500 dark:text-gray-400">Dauki, Madhupur, Plate Boundary</div>
+        </div>
+      </div>
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" id="toggleFaults" class="sr-only peer">
+        <div class="w-12 h-6 bg-gray-300 peer-focus:outline-none rounded-full peer 
+                    dark:bg-gray-700 peer-checked:after:translate-x-full 
+                    peer-checked:after:border-white after:content-[''] 
+                    after:absolute after:top-[2px] after:left-[2px] 
+                    after:bg-white after:rounded-full after:h-5 after:w-5 
+                    after:transition-all peer-checked:bg-orange-600">
+        </div>
+      </label>
+    </div>
+
+    <!-- Reset Button -->
+    <button id="resetBtn" class="w-full bg-gradient-to-r from-red-600 to-rose-600 
+                text-white font-bold py-3.5 rounded-xl shadow-lg hover:shadow-xl 
+                transition-all duration-300 transform hover:scale-105 
+                flex items-center justify-center gap-2">
+      <span>Reset</span>
+      <span>Reset All Filters & Layers</span>
+    </button>
+  </div>
+</div>
+      
     </aside>
 
     <!-- Main Content -->
