@@ -349,3 +349,57 @@ function setupFilters() {
 
   applyFilters();
 }
+
+
+// ==================== EARTHQUAKE RISK ZONES OF BANGLADESH ====================
+let zonesLayer = null;
+
+const bangladeshSeismicZones = [
+  // Zone 1 – Very High Risk (red)
+  { color: "#ef4444", opacity: 0.25, coords: [[[26.63,88.03],[26.63,90.45],[24.5,90.45],[24.5,88.03],[26.63,88.03]]] },
+  // Zone 2 – High Risk (orange) – Sylhet, Chittagong, greater Mymensingh
+  { color: "#f97316", opacity: 0.25, coords: [[[25.0,91.0],[25.0,92.0],[23.7,92.0],[23.7,91.0],[25.0,91.0]],
+                                        [[24.9,90.2],[24.9,91.8],[23.8,91.8],[23.8,90.2],[24.9,90.2]]] },
+  // Zone 3 – Moderate Risk (yellow) – Central & Northwest
+  { color: "#eab308", opacity: 0.2, coords: [[[26.0,88.0],[26.0,90.5],[24.0,90.5],[24.0,88.0],[26.0,88.0]]] },
+  // Zone 4 – Low Risk (green) – Southwest (Khulna, Barisal)
+  { color: "#22c55e", opacity: 0.2, coords: [[[23.8,88.5],[23.8,90.5],[22.0,90.5],[22.0,88.5],[23.8,88.5]]] }
+];
+
+function addSeismicZones() {
+  if (zonesLayer) return;
+  zonesLayer = L.layerGroup().addTo(map);
+  bangladeshSeismicZones.forEach(zone => {
+    zone.coords.forEach(polygon => {
+      L.polygon(polygon, {
+        color: zone.color,
+        weight: 2,
+        fillOpacity: zone.opacity,
+        interactive: false
+      }).addTo(zonesLayer);
+    });
+  });
+}
+
+function removeSeismicZones() {
+  if (zonesLayer) {
+    map.removeLayer(zonesLayer);
+    zonesLayer = null;
+  }
+}
+
+// Toggle button + legend
+document.getElementById('toggleZones').addEventListener('click', function() {
+  const legend = document.getElementById('zonesLegend');
+  if (zonesLayer) {
+    removeSeismicZones();
+    this.textContent = 'Show Zones';
+    this.classList.replace('bg-red-600','bg-indigo-600');
+    legend.classList.add('hidden');
+  } else {
+    addSeismicZones();
+    this.textContent = 'Hide Zones';
+    this.classList.replace('bg-indigo-600','bg-red-600');
+    legend.classList.remove('hidden');
+  }
+});
