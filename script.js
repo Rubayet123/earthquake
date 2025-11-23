@@ -96,25 +96,66 @@ function renderStats() {
   const strongest = allQuakes.find(q => (q.properties.mag || 0) === maxMag);
   const latest = allQuakes[0];
 
+  const strongDate = new Date(strongest.properties.time).toLocaleDateString('en-GB');
+  const latestDate = new Date(latest.properties.time).toLocaleDateString('en-GB');
+  const latestPlace = latest.properties.place.split(',')[0].trim();
+
   document.getElementById('stats').innerHTML = `
-    <div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-xl p-5">
-      <h3 class="text-3xl font-bold">${total}</h3>
-      <p>Total Recorded Quakes</p>
+    <!-- Total Quakes -->
+    <div class="group flex items-center justify-between
+                bg-gradient-to-r from-blue-600 to-blue-700
+                text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
+                transition-all duration-300 cursor-default relative overflow-hidden">
+        <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="flex items-center gap-3 relative z-10">
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
+              Globe
+            </div>
+            <div>
+                <div class="text-xs opacity-90">Total Recorded</div>
+                <div class="font-semibold">Earthquakes</div>
+            </div>
+        </div>
+        <div class="text-3xl font-extrabold relative z-10">${total}</div>
     </div>
 
-    <div class="bg-gradient-to-br from-red-600 to-rose-700 text-white rounded-xl p-5 cursor-pointer hover:opacity-90 transition transform hover:scale-105"
+    <!-- Strongest Ever -->
+    <div class="group flex items-center justify-between
+                bg-gradient-to-r from-rose-600 to-pink-600
+                text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
+                transition-all duration-300 cursor-pointer relative overflow-hidden"
          onclick="focusOnQuake('${strongest.id}')">
-      <h3 class="text-3xl font-bold">M ${maxMag.toFixed(1)}</h3>
-      <p class="text-sm opacity-90">Strongest Ever</p>
-      <p class="text-xs mt-1">${new Date(strongest.properties.time).toLocaleDateString('en-GB')}</p>
+        <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="flex items-center gap-3 relative z-10">
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
+              Lightning
+            </div>
+            <div>
+                <div class="text-xs opacity-90">Strongest Ever</div>
+                <div class="font-semibold text-sm">${strongDate}</div>
+            </div>
+        </div>
+        <div class="text-3xl font-extrabold relative z-10">M ${maxMag.toFixed(1)}</div>
     </div>
 
-    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-xl p-5 cursor-pointer hover:opacity-90 transition transform hover:scale-105"
+    <!-- Latest Quake -->
+    <div class="group flex items-center justify-between
+                bg-gradient-to-r from-emerald-600 to-teal-600
+                text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
+                transition-all duration-300 cursor-pointer relative overflow-hidden"
          onclick="focusOnQuake('${latest.id}')">
-      <h3 class="text-lg font-bold">Latest Quake</h3>
-      <p class="text-xl font-bold">M ${latest.properties.mag.toFixed(1)}</p>
-      <p class="text-sm">${latest.properties.place.split(',')[0]}</p>
-      <p class="text-xs mt-1">${new Date(latest.properties.time).toLocaleDateString('en-GB')}</p>
+        <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
+        <div class="flex items-center gap-3 relative z-10">
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
+              Clock
+            </div>
+            <div>
+                <div class="text-xs opacity-90">Latest Quake</div>
+                <div class="font-semibold text-sm">${latestPlace}</div>
+                <div class="text-xs opacity-80">${latestDate}</div>
+            </div>
+        </div>
+        <div class="text-3xl font-extrabold relative z-10">M ${latest.properties.mag.toFixed(1)}</div>
     </div>
   `;
 }
