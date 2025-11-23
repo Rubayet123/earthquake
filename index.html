@@ -31,83 +31,102 @@
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 min-h-screen">
 
   <!-- Header -->
-  <header class="bg-gradient-to-r from-blue-600 to-teal-600 dark:from-blue-800 dark:to-teal-800 text-white shadow-lg">
-    <div class="container mx-auto px-4 py-6 text-center">
-      <h1 class="text-3xl md:text-5xl font-bold">Bangladesh Earthquake Explorer</h1>
-      <p class="mt-2 text-lg opacity-90">1900 – 2025 | All recorded earthquakes (M ≥ 2.5)</p>
+  <header class="bg-gradient-to-r from-blue-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-5 text-center">
+      <h1 class="text-2xl md:text-4xl font-bold">Bangladesh Earthquake Explorer</h1>
+      <p class="text-sm md:text-lg opacity-90">1900 – 2025 | All recorded quakes (M ≥ 2.5)</p>
     </div>
   </header>
 
-  <div class="container mx-auto px-4 py-8 grid lg:grid-cols-4 gap-8">
-    <!-- Sidebar Controls -->
-    <aside class="lg:col-span-1 space-y-6">
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h2 class="text-xl font-semibold mb-4">Filters</h2>
+  <!-- MOBILE-FIRST LAYOUT -->
+  <div class="flex flex-col lg:flex-row min-h-screen">
 
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium mb-1">Min Magnitude</label>
-            <input type="range" id="magFilter" min="2.5" max="7" step="0.1" value="2.5" class="w-full"/>
-            <span id="magValue" class="text-sm text-gray-600 dark:text-gray-400">≥ 2.5</span>
-          </div>
+    <!-- ====== MAP (shows first on mobile) ====== -->
+    <section class="w-full lg:w-3/4 order-1 lg:order-2">
+      <div class="sticky top-0 z-40 bg-white dark:bg-gray-800 shadow-md p-3 flex justify-between items-center lg:hidden">
+        <button id="toggleSidebar" class="text-xl font-bold">Filters & Stats</button>
+        <button id="resetBtnMobile" class="text-sm bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">Reset</button>
+      </div>
+      <div id="map" class="h-screen lg:h-screen"></div>
+    </section>
 
-          <div>
-            <label class="block text-sm font-medium mb-1">Year Range</label>
-            <input type="range" id="yearFilter" min="1900" max="2025" value="1900" class="w-full"/>
-            <div class="flex justify-between text-xs text-gray-500">
-              <span>1900</span>
-              <span id="yearValue">1900+</span>
-              <span>2025</span>
+    <!-- ====== SIDEBAR (collapsible on mobile) ====== -->
+    <aside class="w-full lg:w-1/4 bg-gray-100 dark:bg-gray-800 order-2 lg:order-1 
+                    fixed lg:static inset-0 z-50 transform transition-transform duration-300
+                    -translate-x-full lg:translate-x-0" id="sidebar">
+      
+      <div class="h-full overflow-y-auto pb-20 lg:pb-0">
+        <div class="p-5">
+          <!-- Close button (mobile only) -->
+          <button id="closeSidebar" class="lg:hidden absolute top-4 right-4 text-3xl font-bold">&times;</button>
+          
+          <h2 class="text-2xl font-bold mb-6 text-center lg:text-left">Filters & Insights</h2>
+
+          <!-- Filters -->
+          <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-5 mb-6">
+            <div class="space-y-5">
+              <div>
+                <label class="block text-sm font-medium mb-2">Minimum Magnitude</label>
+                <input type="range" id="magFilter" min="2.5" max="7" step="0.1" value="2.5" class="w-full h-3"/>
+                <div class="flex justify-between text-sm"><span>2.5</span><span id="magValue" class="font-bold">≥ 2.5</span><span>7.0</span></div>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium mb-2">From Year</label>
+                <input type="range" id="yearFilter" min="1900" max="2025" value="1900" class="w-full h-3"/>
+                <div class="flex justify-between text-sm"><span>1900</span><span id="yearValue" class="font-bold">All time</span><span>2025</span></div>
+              </div>
             </div>
           </div>
 
-          <button id="resetBtn" class="w-full bg-red-500 hover:bg-red-600 text-white font-medium py-2 rounded-lg transition">
-            Reset Filters
-          </button>
+          <!-- Stats Cards -->
+          <div id="stats" class="grid grid-cols-1 gap-4 mb-6"></div>
+
+          <!-- Significant Quakes -->
+          <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-5">
+            <h3 class="text-xl font-bold mb-4">Most Significant Earthquakes</h3>
+            <div id="quakeList" class="space-y-3"></div>
+          </div>
+
+          <!-- Timeline Chart -->
+          <div class="bg-white dark:bg-gray-700 rounded-xl shadow p-5 mt-6">
+            <h3 class="text-xl font-bold mb-4">Timeline (1900–2025)</h3>
+            <div class="relative w-full h-64 md:h-80">
+              <canvas id="timelineChart"></canvas>
+            </div>
+            <p class="text-xs text-gray-500 mt-3 text-center">Tap year → view on map</p>
+          </div>
         </div>
       </div>
-
-      <!-- Stats Cards -->
-      <div id="stats" class="space-y-4"></div>
     </aside>
-
-    <!-- Main Content -->
-    <main class="lg:col-span-3 space-y-8">
-      <!-- Map -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
-        <div id="map" class="h-96 md:h-screen max-h-screen"></div>
-      </div>
-
-      <!-- Timeline Chart -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 md:p-6">
-        <h2 class="text-xl md:text-2xl font-bold mb-4">Earthquake Timeline (1900–2025)</h2>
-        <div class="relative w-full h-64 md:h-80 lg:h-96">
-          <canvas id="timelineChart"></canvas>
-        </div>
-        <p class="text-xs md:text-sm text-gray-500 mt-3 text-center">
-          Tap any bar or point to see earthquakes from that year on the map
-        </p>
-      </div>
-      
-      <!-- Recent Strong Quakes -->
-      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-        <h2 class="text-2xl font-bold mb-4">Most Significant Earthquakes</h2>
-        <div id="quakeList" class="space-y-3"></div>
-      </div>
-      
-    </main>
   </div>
 
   <!-- Footer -->
-  <footer class="bg-gray-800 text-white text-center py-6 mt-12">
-    <p>Data source: <a href="https://earthquake.usgs.gov" class="underline" target="_blank">USGS Earthquake Catalog</a> | 
-       Made with ❤️ for Bangladesh</p>
-    <p class="text-sm mt-2">Deployed on GitHub Pages • <a href="https://github.com/YOUR-USERNAME/bangladesh-earthquakes" class="underline">View Source</a></p>
+  <footer class="bg-gray-800 text-white text-center py-6 mt-auto">
+    <p>Data: <a href="https://earthquake.usgs.gov" class="underline" target="_blank">USGS</a> • 
+       Made with ❤️ for Bangladesh • 
+       <a href="https://github.com/YOUR-USERNAME/bangladesh-earthquakes" class="underline">Source Code</a>
+    </p>
   </footer>
 
-  <!-- Scripts -->
+  <!-- Scripts remain the same -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
   <script src="script.js"></script>
+
+  <!-- Mobile sidebar toggle script -->
+  <script>
+    document.getElementById('toggleSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('-translate-x-full');
+    });
+    document.getElementById('closeSidebar').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+    });
+    document.getElementById('resetBtnMobile').addEventListener('click', () => {
+      document.getElementById('resetBtn').click();
+    });
+  </script>
 </body>
 </html>
