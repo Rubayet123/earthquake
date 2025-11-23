@@ -109,7 +109,7 @@ function renderStats() {
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
             <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
-              Globe
+              🌎
             </div>
             <div>
                 <div class="text-xs opacity-90">Total Recorded</div>
@@ -128,7 +128,7 @@ function renderStats() {
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
             <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
-              Lightning
+              ⚡
             </div>
             <div>
                 <div class="text-xs opacity-90">Strongest Ever</div>
@@ -147,7 +147,7 @@ function renderStats() {
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
             <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
-              Clock
+              🕒
             </div>
             <div>
                 <div class="text-xs opacity-90">Latest Quake</div>
