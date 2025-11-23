@@ -5,3 +5,22 @@ body { font-family: 'Inter', sans-serif; }
 .mag-5 { fill: #FCA5A5; stroke: #EF4444; }
 .mag-6 { fill: #F87171; stroke: #DC2626; }
 .dark .leaflet-container { filter: invert(1) hue-rotate(180deg); }
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #4f46e5;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+}
+.slider::-moz-range-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #4f46e5;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(79, 70, 229, 0.5);
+}
