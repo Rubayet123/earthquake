@@ -2,6 +2,8 @@ let allQuakes = [];
 let map, markerGroup;
 let markers = new Map();
 let timelineChart = null;
+let zonesLayer = null;
+let faultsLayer = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const response = await fetch('data/earthquakes.json');
@@ -12,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderStats();
   renderQuakeList();
   setupFilters();
-  createTimelineChart(); // NEW: Timeline
+  createTimelineChart();
 });
 
 function initMap() {
@@ -90,6 +92,7 @@ function focusOnYear(year) {
   }
 }
 
+// Premium Dynamic Stats Cards
 function renderStats() {
   const total = allQuakes.length;
   const maxMag = Math.max(...allQuakes.map(q => q.properties.mag || 0));
@@ -102,15 +105,10 @@ function renderStats() {
 
   document.getElementById('stats').innerHTML = `
     <!-- Total Quakes -->
-    <div class="group flex items-center justify-between
-                bg-gradient-to-r from-blue-600 to-blue-700
-                text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
-                transition-all duration-300 cursor-default relative overflow-hidden">
+    <div class="group flex items-center justify-between bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-default relative overflow-hidden">
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
-            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
-              🌎
-            </div>
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">Globe</div>
             <div>
                 <div class="text-xs opacity-90">Total Recorded</div>
                 <div class="font-semibold">Earthquakes</div>
@@ -120,16 +118,11 @@ function renderStats() {
     </div>
 
     <!-- Strongest Ever -->
-    <div class="group flex items-center justify-between
-                bg-gradient-to-r from-rose-600 to-pink-600
-                text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
-                transition-all duration-300 cursor-pointer relative overflow-hidden"
+    <div class="group flex items-center justify-between bg-gradient-to-r from-rose-600 to-pink-600 text-white rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden"
          onclick="focusOnQuake('${strongest.id}')">
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
-            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
-              ⚡
-            </div>
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">Lightning</div>
             <div>
                 <div class="text-xs opacity-90">Strongest Ever</div>
                 <div class="font-semibold text-sm">${strongDate}</div>
@@ -139,16 +132,11 @@ function renderStats() {
     </div>
 
     <!-- Latest Quake -->
-    <div class="group flex items-center justify-between
-                bg-gradient-to-r from-emerald-600 to-teal-600
-                text-white rounded-xl p-4 shadow-lg hover:shadow-2xl
-                transition-all duration-300 cursor-pointer relative overflow-hidden"
+    <div class="group flex items-center justify-between bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl p-4 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer relative overflow-hidden"
          onclick="focusOnQuake('${latest.id}')">
         <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></div>
         <div class="flex items-center gap-3 relative z-10">
-            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">
-              🕒
-            </div>
+            <div class="w-11 h-11 flex items-center justify-center rounded-lg bg-white/20 backdrop-blur-md text-2xl">Clock</div>
             <div>
                 <div class="text-xs opacity-90">Latest Quake</div>
                 <div class="font-semibold text-sm">${latestPlace}</div>
@@ -184,11 +172,8 @@ function renderQuakeList() {
   }).join('');
 }
 
-// NEW: Beautiful Interactive Timeline Chart
 function createTimelineChart() {
   const ctx = document.getElementById('timelineChart').getContext('2d');
-
-  // Group by year
   const yearly = {};
   allQuakes.forEach(q => {
     const year = new Date(q.properties.time).getFullYear();
@@ -201,7 +186,6 @@ function createTimelineChart() {
   const counts = years.map(y => yearly[y].count);
   const maxMags = years.map(y => yearly[y].maxMag);
 
-  // Destroy previous chart if exists
   if (timelineChart) timelineChart.destroy();
 
   timelineChart = new Chart(ctx, {
@@ -217,7 +201,6 @@ function createTimelineChart() {
           borderColor: 'rgb(79, 70, 229)',
           borderWidth: 1,
           borderRadius: 6,
-          borderSkipped: false,
           yAxisID: 'y'
         },
         {
@@ -240,21 +223,13 @@ function createTimelineChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
+      interaction: { mode: 'index', intersect: false },
       plugins: {
-        legend: {
-          position: 'top',
-          labels: { font: { size: 14 }, padding: 20 }
-        },
+        legend: { position: 'top', labels: { font: { size: 14 }, padding: 20 } },
         tooltip: {
           backgroundColor: 'rgba(0,0,0,0.8)',
           cornerRadius: 8,
           padding: 12,
-          titleFont: { size: 14 },
-          bodyFont: { size: 13 },
           callbacks: {
             label: (ctx) => {
               if (ctx.dataset.label.includes('Number')) {
@@ -267,48 +242,14 @@ function createTimelineChart() {
         }
       },
       scales: {
-        x: {
-          ticks: {
-            maxTicksLimit: 12,
-            font: { size: 11 },
-            callback: function(value, index) {
-              const year = years[index];
-              return year % 10 === 0 ? year : (window.innerWidth < 640 && year % 20 !== 0) ? '' : year;
-            }
-          },
-          grid: { display: false }
-        },
-        y: {
-          type: 'linear',
-          position: 'left',
-          title: { display: true, text: 'Count', font: { weight: 'bold' } },
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1,                    // Forces integers only
-            callback: value => value,       // Shows 0,1,2,3,... cleanly
-            font: { size: 12 }
-          },
-          grid: { color: 'rgba(0,0,0,0.05)' }
-        },
-        y1: {
-          type: 'linear',
-          position: 'right',
-          min: 2.5,
-          max: 8,
-          title: { display: true, text: 'Magnitude', color: '#ef4444', font: { weight: 'bold' } },
-          ticks: {
-            stepSize: 0.5,
-            font: { size: 12 },
-            color: '#ef4444'
-          },
-          grid: { drawOnChartArea: false }
-        }
+        x: { ticks: { maxTicksLimit: 12 }, grid: { display: false } },
+        y: { beginAtZero: true, ticks: { stepSize: 1 }, title: { display: true, text: 'Count' } },
+        y1: { position: 'right', min: 2.5, max: 8, title: { display: true, text: 'Magnitude', color: '#ef4444' }, grid: { drawOnChartArea: false } }
       },
       onClick: (e, elements) => {
         if (elements.length > 0) {
           const index = elements[0].index;
-          const year = years[index];
-          focusOnYear(year);
+          focusOnYear(years[index]);
         }
       }
     }
@@ -324,12 +265,10 @@ function setupFilters() {
   const applyFilters = () => {
     const minMag = parseFloat(magSlider.value);
     const minYear = parseInt(yearSlider.value);
-
     const filtered = allQuakes.filter(q => {
       const year = new Date(q.properties.time).getFullYear();
       return (q.properties.mag || 0) >= minMag && year >= minYear;
     });
-
     updateMap(filtered);
     magValue.textContent = `≥ ${minMag}`;
     yearValue.textContent = minYear === 1900 ? 'All time' : minYear + '+';
@@ -338,32 +277,29 @@ function setupFilters() {
   magSlider.addEventListener('input', applyFilters);
   yearSlider.addEventListener('input', applyFilters);
 
+  // Reset Button — Resets Everything
   document.getElementById('resetBtn').addEventListener('click', () => {
-  magSlider.value = 2.5;
-  yearSlider.value = 1900;
-  applyFilters();
-  
-  // Reset map to default Bangladesh view
-  map.setView([23.7, 90.4], 7);
+    magSlider.value = 2.5;
+    yearSlider.value = 1900;
+    applyFilters();
+    map.setView([23.7, 90.4], 7);
+
+    // Turn off layers
+    document.getElementById('toggleZones').checked = false;
+    document.getElementById('toggleFaults').checked = false;
+    removeSeismicZones();
+    removeFaultLines();
   });
 
   applyFilters();
 }
 
-
-// ==================== EARTHQUAKE RISK ZONES OF BANGLADESH ====================
-let zonesLayer = null;
-
+// ==================== EARTHQUAKE RISK ZONES ====================
 const bangladeshSeismicZones = [
-  // Zone 1 – Very High Risk (red)
   { color: "#ef4444", opacity: 0.25, coords: [[[26.63,88.03],[26.63,90.45],[24.5,90.45],[24.5,88.03],[26.63,88.03]]] },
-  // Zone 2 – High Risk (orange) – Sylhet, Chittagong, greater Mymensingh
-  { color: "#f97316", opacity: 0.25, coords: [[[25.0,91.0],[25.0,92.0],[23.7,92.0],[23.7,91.0],[25.0,91.0]],
-                                        [[24.9,90.2],[24.9,91.8],[23.8,91.8],[23.8,90.2],[24.9,90.2]]] },
-  // Zone 3 – Moderate Risk (yellow) – Central & Northwest
-  { color: "#eab308", opacity: 0.2, coords: [[[26.0,88.0],[26.0,90.5],[24.0,90.5],[24.0,88.0],[26.0,88.0]]] },
-  // Zone 4 – Low Risk (green) – Southwest (Khulna, Barisal)
-  { color: "#22c55e", opacity: 0.2, coords: [[[23.8,88.5],[23.8,90.5],[22.0,90.5],[22.0,88.5],[23.8,88.5]]] }
+  { color: "#f97316", opacity: 0.25, coords: [[[25.0,91.0],[25.0,92.0],[23.7,92.0],[23.7,91.0],[25.0,91.0]], [[24.9,90.2],[24.9,91.8],[23.8,91.8],[23.8,90.2],[24.9,90.2]]] },
+  { color: "#eab308", opacity: 0.2, coords: [[ [26.0,88.0],[26.0,90.5],[24.0,90.5],[24.0,88.0],[26.0,88.0] ]] },
+  { color: "#22c55e", opacity: 0.2, coords: [[ [23.8,88.5],[23.8,90.5],[22.0,90.5],[22.0,88.5],[23.8,88.5] ]] }
 ];
 
 function addSeismicZones() {
@@ -371,35 +307,56 @@ function addSeismicZones() {
   zonesLayer = L.layerGroup().addTo(map);
   bangladeshSeismicZones.forEach(zone => {
     zone.coords.forEach(polygon => {
-      L.polygon(polygon, {
-        color: zone.color,
-        weight: 2,
-        fillOpacity: zone.opacity,
-        interactive: false
-      }).addTo(zonesLayer);
+      L.polygon(polygon, { color: zone.color, weight: 2, fillOpacity: zone.opacity, interactive: false }).addTo(zonesLayer);
     });
   });
 }
 
 function removeSeismicZones() {
-  if (zonesLayer) {
-    map.removeLayer(zonesLayer);
-    zonesLayer = null;
+  if (zonesLayer) { map.removeLayer(zonesLayer); zonesLayer = null; }
+}
+
+document.getElementById('toggleZones').addEventListener('change', function() {
+  this.checked ? addSeismicZones() : removeSeismicZones();
+});
+
+// ==================== MAJOR FAULT LINES ====================
+const majorFaultLines = [
+  { coords: [[25.17,90.95],[25.18,91.85],[25.25,92.10]] }, // Dauki
+  { coords: [[24.70,90.40],[24.10,90.45]] },              // Madhupur
+  { coords: [[24.90,91.80],[25.20,92.00]] },              // Sylhet
+  { coords: [[21.50,92.20],[22.80,92.40],[23.50,92.50]] }, // Plate Boundary
+  { coords: [[23.00,91.30],[24.20,91.60]] },              // Tripura
+  { coords: [[25.10,90.30],[25.15,90.50]] }               // Haluaghat
+];
+
+function addFaultLines() {
+  if (faultsLayer) return;
+  faultsLayer = L.layerGroup().addTo(map);
+
+  majorFaultLines.forEach(fault => {
+    L.polyline(fault.coords, {
+      color: "#dc2626",
+      weight: 4,
+      opacity: 0.9,
+      dashArray: "10, 10",
+      lineCap: "round"
+    }).addTo(faultsLayer)
+      .bindTooltip("Major Fault Line", { permanent: false, direction: "center" });
+  });
+
+  if (!document.getElementById('fault-glow-style')) {
+    const style = document.createElement('style');
+    style.id = 'fault-glow-style';
+    style.innerHTML = `.fault-line-glow { filter: drop-shadow(0 0 8px rgba(220,38,38,0.9)); }`;
+    document.head.appendChild(style);
   }
 }
 
-// Toggle button + legend
-document.getElementById('toggleZones').addEventListener('click', function() {
-  const legend = document.getElementById('zonesLegend');
-  if (zonesLayer) {
-    removeSeismicZones();
-    this.textContent = 'Show Zones';
-    this.classList.replace('bg-red-600','bg-indigo-600');
-    legend.classList.add('hidden');
-  } else {
-    addSeismicZones();
-    this.textContent = 'Hide Zones';
-    this.classList.replace('bg-indigo-600','bg-red-600');
-    legend.classList.remove('hidden');
-  }
+function removeFaultLines() {
+  if (faultsLayer) { map.removeLayer(faultsLayer); faultsLayer = null; }
+}
+
+document.getElementById('toggleFaults').addEventListener('change', function() {
+  this.checked ? addFaultLines() : removeFaultLines();
 });
