@@ -298,9 +298,12 @@ function setupFilters() {
   yearSlider.addEventListener('input', applyFilters);
 
   document.getElementById('resetBtn').addEventListener('click', () => {
-    magSlider.value = 2.5;
-    yearSlider.value = 1900;
-    applyFilters();
+  magSlider.value = 2.5;
+  yearSlider.value = 1900;
+  applyFilters();
+  
+  // Reset map to default Bangladesh view
+  map.setView([23.7, 90.4], 7);
   });
 
   applyFilters();
